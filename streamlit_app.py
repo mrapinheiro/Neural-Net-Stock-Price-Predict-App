@@ -89,7 +89,7 @@ def main():
 
             # Load trained model based on selection
             if selected_model == "Neural Network":
-                model_url = "https://github.com/mrapinheiro/aeon-stock-price-predict/raw/main/NN_model.keras"
+                model_url = "https://github.com/mrapinheiro/aeon-stock-price-predict/raw/main/Models/NN_model.keras"
                 model_filename = "NN_model.keras"
 
             # Download model file
