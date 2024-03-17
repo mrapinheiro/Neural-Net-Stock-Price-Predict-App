@@ -136,6 +136,7 @@ def main():
 
             for i in range(30):
                 x_forecast = last_100_days_scaled[-100:].reshape(1, -1)
+                x_forecast = np.expand_dims(x_forecast, axis=-1)
                 y_forecast = model.predict(x_forecast)
                 forecast.iloc[i] = scaler.inverse_transform(y_forecast)[0][0]
                 last_100_days_scaled = np.append(last_100_days_scaled, y_forecast)
