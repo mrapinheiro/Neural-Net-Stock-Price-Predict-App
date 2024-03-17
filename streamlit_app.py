@@ -98,7 +98,7 @@ def perform_and_display_forecasting(stock_data, model, scaler):
     st.plotly_chart(fig4, use_container_width=True)
 
 def main():
-    st.sidebar.title('Stock Price Forecasting App')
+    st.sidebar.title('Stock Price Predict')
     stock_symbol = st.sidebar.text_input('Enter Stock Ticker Symbol (e.g., MSFT):')
     start_date = st.sidebar.date_input('Select Start Date:', datetime.now() - timedelta(days=365))
     end_date = st.sidebar.date_input('Select End Date:', datetime.now())
