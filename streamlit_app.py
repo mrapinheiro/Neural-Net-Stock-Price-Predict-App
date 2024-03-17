@@ -104,7 +104,7 @@ def main():
 
             # Prepare data for prediction
             x_pred = create_dataset(scaled_data)
-            x_pred = np.expand_dims(x_pred, axis=-1)
+            x_pred = x_pred.reshape(x_pred.shape[0], -1)
 
             # Predict stock prices
             y_pred = model.predict(x_pred)
@@ -131,15 +131,17 @@ def main():
             forecast = pd.DataFrame(index=forecast_dates, columns=['Forecast'])
 
             # Use the last 100 days of data for forecasting
+            # Correcting forecasting section
             last_100_days = stock_data['Close'].tail(100)
             last_100_days_scaled = scaler.transform(np.array(last_100_days).reshape(-1, 1))
 
             for i in range(30):
+                # Preparing data for forecasting correctly
                 x_forecast = last_100_days_scaled[-100:].reshape(1, -1)
-                x_forecast = np.expand_dims(x_forecast, axis=-1)
                 y_forecast = model.predict(x_forecast)
                 forecast.iloc[i] = scaler.inverse_transform(y_forecast)[0][0]
-                last_100_days_scaled = np.append(last_100_days_scaled, y_forecast)
+                # Ensure to update last_100_days_scaled correctly for subsequent forecasts
+                last_100_days_scaled = np.append(last_100_days_scaled, y_forecast)[-100:]
 
             st.subheader('30-Day Forecast')
             st.write(forecast)
