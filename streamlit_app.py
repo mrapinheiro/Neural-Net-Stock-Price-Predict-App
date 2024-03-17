@@ -118,10 +118,8 @@ def main():
             display_charts(stock_data)
 
             if selected_model == "Neural Network":
-                model_url = "https://github.com/mrapinheiro/aeon-stock-price-predict/raw/main/Models/NN_model.keras"
-                model_filename = "NN_model.keras"
-                download_model(model_url, model_filename)
-                model = load_model(model_filename)
+                model = load_model('Models/NN_model.keras')
+
 
                 scaler, y_pred = prepare_and_predict(stock_data, model)
                 display_prediction_chart(stock_data, y_pred)
