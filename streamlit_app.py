@@ -89,8 +89,8 @@ def main():
 
             # Load trained model based on selection
             if selected_model == "Neural Network":
-                model_url = "https://github.com/rajdeepUWE/stock_market_forecast/raw/master/KNN_model.h5"
-                model_filename = "NN_model.h5"
+                model_url = "https://github.com/mrapinheiro/aeon-stock-price-predict/raw/main/NN_model.keras"
+                model_filename = "NN_model.keras"
 
             # Download model file
             download_model(model_url, model_filename)
