@@ -104,6 +104,7 @@ def main():
 
             # Prepare data for prediction
             x_pred = create_dataset(scaled_data)
+            x_pred = np.expand_dims(x_pred, axis=-1)
 
             # Predict stock prices
             y_pred = model.predict(x_pred)
