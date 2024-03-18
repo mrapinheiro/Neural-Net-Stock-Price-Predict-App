@@ -7,7 +7,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from tensorflow.keras.models import load_model
 import plotly.graph_objs as go
-import requests
+
+# Cache the model loading to speed up app loading
+@st.cache(allow_output_mutation=True)
+def load_trained_model(model_path):
+    return load_model(model_path)
 
 def calculate_moving_average(data, window_size):
     return data.rolling(window=window_size).mean()
@@ -93,26 +97,30 @@ def perform_and_display_forecasting(stock_data, model, scaler):
     st.plotly_chart(fig4, use_container_width=True)
 
 def main():
-    st.sidebar.title('Stock Price Predict')
+    st.sidebar.title('Stock Price Prediction')
     stock_symbol = st.sidebar.text_input('Enter Stock Ticker Symbol (e.g., MSFT):')
     start_date = st.sidebar.date_input('Select Start Date:', datetime.now() - timedelta(days=365))
     end_date = st.sidebar.date_input('Select End Date:', datetime.now())
-    selected_model = st.sidebar.radio("Select Model", ("Neural Network",  ))
+    selected_model = st.sidebar.radio("Select Model", ("Neural Network",))
 
     if stock_symbol:
-        stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
+        with st.spinner('Fetching stock data...'):
+            stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
+        
         if not stock_data.empty:
             st.subheader(f'Stock Data for {stock_symbol}')
-            st.write(stock_data.tail())  # Show the latest data
-
+            st.write(stock_data.tail())
+            
             stock_data['MA100'] = calculate_moving_average(stock_data['Close'], 100)
             stock_data['MA200'] = calculate_moving_average(stock_data['Close'], 200)
-
+            
             display_charts(stock_data)
 
             if selected_model == "Neural Network":
-                model = load_model('Models/NN_model.keras')
-    
+                with st.spinner('Loading the prediction model...'):
+                    model_path = 'Models/NN_model.keras'
+                    model = load_trained_model(model_path)
+                
                 scaler, y_pred = prepare_and_predict(stock_data, model)
                 display_prediction_chart(stock_data, y_pred)
                 display_evaluation_metrics(stock_data, y_pred)
