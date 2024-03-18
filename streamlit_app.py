@@ -8,17 +8,18 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from tensorflow.keras.models import load_model
 import plotly.graph_objs as go
 
+# Cache the model loading to speed up app loading
+@st.cache(allow_output_mutation=True)
 def load_trained_model(model_path):
     return load_model(model_path)
 
 def calculate_moving_average(data, window_size):
     return data.rolling(window=window_size).mean()
 
-def create_dataset(dataset, look_back=100):
+def create_dataset(data, look_back=100):
     X = []
-    for i in range(len(dataset) - look_back):
-        a = dataset[i:(i + look_back), :]
-        X.append(a)
+    for i in range(len(data) - look_back):
+        X.append(data[i:(i + look_back)])
     return np.array(X)
 
 def display_charts(stock_data):
@@ -48,28 +49,12 @@ def display_charts(stock_data):
     st.plotly_chart(volume_fig, use_container_width=True)
 
 def prepare_and_predict(stock_data, model):
-    # Assuming stock_data is a DataFrame with 'Close', 'MA100', 'MA200'
-    features = stock_data[['Close', 'MA100', 'MA200']].dropna()
     scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled_features = scaler.fit_transform(features)
-    
-    # Prepare dataset for prediction
-    # Make sure to use 'scaled_features' here since that's what you've defined above
-    x_pred = create_dataset(scaled_features, look_back=100)  # Corrected variable name
-    # Debugging or logging to check x_pred shape
-    print("Shape of x_pred before reshaping:", x_pred.shape)
-    
-    # Ensure 'features_considered' matches the features used here for consistency
-    features_considered = ['Close', 'MA100', 'MA200']  # Define this if not already defined elsewhere
-    x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
-    
-    # Predict
+    scaled_data = scaler.fit_transform(np.array(stock_data['Close']).reshape(-1, 1))
+    x_pred = create_dataset(scaled_data)
+    x_pred = x_pred.reshape(x_pred.shape[0], -1)  # Adjusting the reshape to match model input
     y_pred = model.predict(x_pred)
-    
-    # Inverse scaling for prediction
-    # Adjust this part if your model's output is multi-dimensional and needs different handling
-    y_pred = scaler.inverse_transform(np.concatenate((y_pred, np.zeros((y_pred.shape[0], len(features_considered)-1))), axis=1))[:,0]
-    
+    y_pred = scaler.inverse_transform(y_pred)
     return scaler, y_pred
 
 def display_prediction_chart(stock_data, y_pred):
@@ -133,7 +118,7 @@ def main():
 
             if selected_model == "Neural Network":
                 with st.spinner('Loading the prediction model...'):
-                    model_path = 'Models/nn_model.keras'
+                    model_path = 'Models/NN_model.keras'  # Ensure this path is correct
                     model = load_trained_model(model_path)
                 
                 scaler, y_pred = prepare_and_predict(stock_data, model)
