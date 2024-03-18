@@ -53,7 +53,9 @@ def prepare_and_predict(stock_data, model):
     scaled_features = scaler.fit_transform(features)
     
     # Prepare dataset for prediction
-    x_pred = create_dataset(scaled_features, look_back=100)
+    x_pred = create_dataset(scaled_data, look_back=100)
+    # Debugging or logging to check x_pred shape
+    print("Shape of x_pred before reshaping:", x_pred.shape)
     x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
     
     # Predict
