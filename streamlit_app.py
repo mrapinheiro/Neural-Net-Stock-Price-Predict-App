@@ -126,7 +126,7 @@ def main():
 
             if selected_model == "Neural Network":
                 with st.spinner('Loading the prediction model...'):
-                    model_path = 'Models/NN_model.keras'
+                    model_path = 'Models/nn_model.keras'
                     model = load_trained_model(model_path)
                 
                 scaler, y_pred = prepare_and_predict(stock_data, model)
