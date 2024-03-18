@@ -1,4 +1,5 @@
-# aeon-stock-price-predict
+# Aeon Stock Price Predict
 
-Current Models:
-Neural Network
+### Current Models
+
+- Neural Network
