@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model
 import plotly.graph_objs as go
 
 # Cache the model loading to speed up app loading
-@st.experimental_memo
+@st.cache_data
 def load_trained_model(model_path):
     return load_model(model_path)
 
@@ -126,7 +126,7 @@ def main():
 
             if selected_model == "Neural Network":
                 with st.spinner('Loading the prediction model...'):
-                    model_path = 'Models/NN_model.keras'  # Ensure this path is correct
+                    model_path = 'Models/NN_model.keras'
                     model = load_trained_model(model_path)
                 
                 scaler, y_pred = prepare_and_predict(stock_data, model)
