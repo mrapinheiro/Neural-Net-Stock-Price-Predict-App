@@ -55,7 +55,7 @@ def prepare_and_predict(stock_data, model):
     scaled_features = scaler.fit_transform(features)
     
     # Prepare dataset for prediction
-    x_pred, _ = create_dataset(scaled_features, look_back=100)  # look_back to match training
+    x_pred = create_dataset(scaled_features, look_back=100)
     x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
     
     # Predict
