@@ -102,7 +102,7 @@ def main():
     stock_symbol = st.sidebar.text_input('Enter Stock Ticker Symbol (e.g., MSFT):')
     start_date = st.sidebar.date_input('Select Start Date:', datetime.now() - timedelta(days=365))
     end_date = st.sidebar.date_input('Select End Date:', datetime.now())
-    selected_model = st.sidebar.radio("Select Model", ("Neural Network",))
+    selected_model = st.sidebar.radio("Select Model", ("Neural Network"))
 
     if stock_symbol:
         stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
@@ -117,8 +117,7 @@ def main():
 
             if selected_model == "Neural Network":
                 model = load_model('Models/NN_model.keras')
-
-
+    
                 scaler, y_pred = prepare_and_predict(stock_data, model)
                 display_prediction_chart(stock_data, y_pred)
                 display_evaluation_metrics(stock_data, y_pred)
