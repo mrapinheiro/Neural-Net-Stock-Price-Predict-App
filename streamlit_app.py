@@ -53,14 +53,20 @@ def prepare_and_predict(stock_data, model):
     scaled_features = scaler.fit_transform(features)
     
     # Prepare dataset for prediction
-    x_pred = create_dataset(scaled_data, look_back=100)
+    # Make sure to use 'scaled_features' here since that's what you've defined above
+    x_pred = create_dataset(scaled_features, look_back=100)  # Corrected variable name
     # Debugging or logging to check x_pred shape
     print("Shape of x_pred before reshaping:", x_pred.shape)
+    
+    # Ensure 'features_considered' matches the features used here for consistency
+    features_considered = ['Close', 'MA100', 'MA200']  # Define this if not already defined elsewhere
     x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
     
     # Predict
     y_pred = model.predict(x_pred)
+    
     # Inverse scaling for prediction
+    # Adjust this part if your model's output is multi-dimensional and needs different handling
     y_pred = scaler.inverse_transform(np.concatenate((y_pred, np.zeros((y_pred.shape[0], len(features_considered)-1))), axis=1))[:,0]
     
     return scaler, y_pred
