@@ -14,10 +14,11 @@ def load_trained_model(model_path):
 def calculate_moving_average(data, window_size):
     return data.rolling(window=window_size).mean()
 
-def create_dataset(data, look_back=100):
+def create_dataset(dataset, look_back=100):
     X = []
-    for i in range(len(data) - look_back):
-        X.append(data[i:(i + look_back)])
+    for i in range(len(dataset) - look_back):
+        a = dataset[i:(i + look_back), :]
+        X.append(a)
     return np.array(X)
 
 def display_charts(stock_data):
