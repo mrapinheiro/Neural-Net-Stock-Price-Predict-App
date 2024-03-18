@@ -53,24 +53,26 @@ def prepare_and_predict(stock_data, model):
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_features = scaler.fit_transform(features)
     
-    # Prepare dataset for prediction
-    # Make sure to use 'scaled_features' here since that's what you've defined above
-    x_pred = create_dataset(scaled_features, look_back=100)  # Corrected variable name
-    # Debugging or logging to check x_pred shape
+    # Prepare dataset for prediction. Note: 'create_dataset' should properly handle multiple features
+    x_pred = create_dataset(scaled_features, look_back=100)
     print("Shape of x_pred before reshaping:", x_pred.shape)
     
-    # Ensure 'features_considered' matches the features used here for consistency
-    features_considered = ['Close', 'MA100', 'MA200']  # Define this if not already defined elsewhere
-    x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
+    # Define 'features_considered' to match the number of features used in 'scaled_features'
+    features_considered = ['Close', 'MA100', 'MA200']
+    
+    # Check if x_pred has the expected dimensions before attempting to reshape
+    if x_pred.ndim == 3 and x_pred.shape[2] == len(features_considered):
+        x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
+    else:
+        print("x_pred does not have the expected dimensions: [samples, time steps, features]. Reshaping skipped.")
     
     # Predict
     y_pred = model.predict(x_pred)
     
-    # Inverse scaling for prediction
-    # Adjust this part if your model's output is multi-dimensional and needs different handling
-    y_pred = scaler.inverse_transform(np.concatenate((y_pred, np.zeros((y_pred.shape[0], len(features_considered)-1))), axis=1))[:,0]
+    # Adjust the prediction scaling, if necessary. This part assumes model output matches the scaler's expected input
+    y_pred_rescaled = scaler.inverse_transform(np.concatenate((y_pred, np.zeros((y_pred.shape[0], len(features_considered)-1))), axis=1))[:,0]
     
-    return scaler, y_pred
+    return scaler, y_pred_rescaled
 
 def display_prediction_chart(stock_data, y_pred):
     fig3 = go.Figure()
