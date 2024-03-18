@@ -118,7 +118,7 @@ def main():
             if selected_model == "Neural Network":
                 model = load_model('Models/NN_model.keras')
             elif selected_model == "Random Forest":
-                model = load_model('Models/randomforest_model.keras')
+                model = load_model('Models/randomforest_model.pkl')
 
                 scaler, y_pred = prepare_and_predict(stock_data, model)
                 display_prediction_chart(stock_data, y_pred)
