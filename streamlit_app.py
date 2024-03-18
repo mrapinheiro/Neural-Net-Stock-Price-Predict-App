@@ -18,11 +18,6 @@ def create_dataset(data, look_back=100):
         X.append(data[i:(i + look_back)])
     return np.array(X)
 
-def download_model(model_url, model_filename):
-    response = requests.get(model_url)
-    with open(model_filename, 'wb') as f:
-        f.write(response.content)
-
 def display_charts(stock_data):
     # Price vs MA100
     fig1 = go.Figure()
