@@ -49,12 +49,20 @@ def display_charts(stock_data):
     st.plotly_chart(volume_fig, use_container_width=True)
 
 def prepare_and_predict(stock_data, model):
+    # Assuming stock_data is a DataFrame with 'Close', 'MA100', 'MA200'
+    features = stock_data[['Close', 'MA100', 'MA200']].dropna()
     scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled_data = scaler.fit_transform(np.array(stock_data['Close']).reshape(-1, 1))
-    x_pred = create_dataset(scaled_data)
-    x_pred = x_pred.reshape(x_pred.shape[0], -1)  # Adjusting the reshape to match model input
+    scaled_features = scaler.fit_transform(features)
+    
+    # Prepare dataset for prediction
+    x_pred, _ = create_dataset(scaled_features, look_back=100)  # look_back to match training
+    x_pred = np.reshape(x_pred, (x_pred.shape[0], x_pred.shape[1], len(features_considered)))
+    
+    # Predict
     y_pred = model.predict(x_pred)
-    y_pred = scaler.inverse_transform(y_pred)
+    # Inverse scaling for prediction
+    y_pred = scaler.inverse_transform(np.concatenate((y_pred, np.zeros((y_pred.shape[0], len(features_considered)-1))), axis=1))[:,0]
+    
     return scaler, y_pred
 
 def display_prediction_chart(stock_data, y_pred):
