@@ -1,4 +1,4 @@
-# Aeon Quant Stock Price Predict APP
+# Aeon Quant Stock Price Predict App
 
 ### Current Models
 
