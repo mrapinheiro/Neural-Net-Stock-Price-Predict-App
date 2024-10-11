@@ -12,7 +12,7 @@ This repository hosts a stock price prediction application leveraging a neural n
 
 ## Models
 
-The neural network model is detailed in the `Models/neural_network_forecaster.py` notebook. This notebook outlines the model's architecture, training process, and evaluation metrics. The final model is saved as `Models/NN_model.keras`, which the Streamlit application uses for making predictions.
+The neural network model is detailed in the `Models/neural_network_forecaster.py` notebook. This notebook outlines the model's architecture, training process, and evaluation metrics. The final model is saved as `Models/neural_network_forecaster.keras`, which the Streamlit application uses for making predictions.
 
 ## Contributing
 
