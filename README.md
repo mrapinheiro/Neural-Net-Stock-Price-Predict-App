@@ -1,4 +1,4 @@
-# Neural Network Stock Price Prediction App
+# Neural Stock Price Prediction App
 
 ## Overview
 
