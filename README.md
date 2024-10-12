@@ -20,4 +20,4 @@ We welcome contributions from the community. If you have suggestions or improvem
 
 ## License
 
-This project is available under the MIT License. For more details, see the [LICENSE](LICENSE) file.
+This project is available under the  GPL-3.0 License. For more details, see the [LICENSE](LICENSE) file.
