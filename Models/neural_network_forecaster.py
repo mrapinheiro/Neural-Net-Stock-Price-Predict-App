@@ -68,7 +68,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_wei
 model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1, validation_split=0.2, callbacks=[early_stopping])
 
 # Save the trained model
-model.save('NN_model.h5')
+model.save('neural_network_forecaster.keras')
 
 # Predictions on test set
 y_pred = model.predict(x_test)
