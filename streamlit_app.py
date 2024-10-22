@@ -39,21 +39,38 @@ def main():
     if stock_symbol:
         with st.spinner('Fetching stock data...'):
             stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
-        
+
         if not stock_data.empty and len(stock_data) > 100:
             st.subheader(f'Stock Data for {stock_symbol}')
             st.write(stock_data.tail())
 
+            # Handle missing columns
+            required_columns = ['Close', 'Open', 'High', 'Low', 'Volume']
+            missing_columns = [col for col in required_columns if col not in stock_data.columns]
+
+            if missing_columns:
+                st.error(f"The following columns are missing from the stock data: {missing_columns}")
+                return
+
+            # Handle NaN values in stock data
+            stock_data.dropna(inplace=True)
+
+            # Calculate moving averages
             stock_data['MA100'] = calculate_moving_average(stock_data['Close'], 100)
             stock_data['MA200'] = calculate_moving_average(stock_data['Close'], 200)
 
-            display_charts(stock_data)
+            # Display charts if data is available
+            if len(stock_data) >= 2:
+                display_charts(stock_data)
+            else:
+                st.error("Not enough data to display charts.")
 
+            # Load the model and perform prediction if selected
             if selected_model == "Neural Network":
                 with st.spinner('Loading the prediction model...'):
                     model_path = 'Models/neural_network_forecaster.keras'  # Ensure this path is correct
                     model = load_trained_model(model_path)
-                
+
                 if model is not None:
                     scaler, y_pred = prepare_and_predict(stock_data, model)
                     display_prediction_chart(stock_data, y_pred)
@@ -68,3 +85,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
