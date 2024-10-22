@@ -143,8 +143,6 @@ if stock_symbol:
             perform_and_display_forecasting(stock_data, model, scaler)
     else:
         st.error("Failed to fetch stock data. Please check the ticker symbol and try again.")
-    else:
-        st.info("Enter a stock ticker symbol to begin.")
 
 if __name__ == '__main__':
     main()
