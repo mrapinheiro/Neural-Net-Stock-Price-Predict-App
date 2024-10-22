@@ -4,4 +4,4 @@ scikit-learn
 tensorflow==2.16.1
 plotly
 keras==3.0.5
-protobuf==3.20.0
+protobuf==3.6.0
