@@ -38,6 +38,7 @@ def display_charts(stock_data):
     st.plotly_chart(fig1, use_container_width=True)
 
     # Price vs MA100 vs MA200
+    st.subheader('30-Day Forecast')
     fig2 = go.Figure()
     fig2.add_trace(go.Scatter(
         x=stock_data.index, y=stock_data['Close'], mode='lines', name='Close Price'))
