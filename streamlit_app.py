@@ -103,46 +103,32 @@ def main():
     end_date = st.sidebar.date_input('Select End Date:', datetime.now())
     selected_model = st.sidebar.radio("Select Model", ("Neural Network",))
 
-if stock_symbol:
-    with st.spinner('Fetching stock data...'):
-        stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
-    
-    # Debugging added to inspect stock_data
-    if not stock_data.empty:
-        st.subheader(f'Stock Data for {stock_symbol}')
-        st.write(stock_data.describe())  # Describe stock data for overview
-        st.write(stock_data.head())      # Print head of stock data to inspect
-
-        stock_data['MA100'] = calculate_moving_average(stock_data['Close'], 100)
-        stock_data['MA200'] = calculate_moving_average(stock_data['Close'], 200)
-
-        # Check for missing values
-        if stock_data.isna().sum().sum() > 0:
-            st.error("Data contains missing values. Please fill missing values.")
-        stock_data = stock_data.fillna(method='ffill')  # Forward fill to handle NaN values
+    if stock_symbol:
+        with st.spinner('Fetching stock data...'):
+            stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
         
-        display_charts(stock_data)
+        if not stock_data.empty:
+            st.subheader(f'Stock Data for {stock_symbol}')
+            st.write(stock_data.tail())
+            
+            stock_data['MA100'] = calculate_moving_average(stock_data['Close'], 100)
+            stock_data['MA200'] = calculate_moving_average(stock_data['Close'], 200)
+            
+            display_charts(stock_data)
 
-        if selected_model == "Neural Network":
-            with st.spinner('Loading the prediction model...'):
-                model_path = 'Models/neural_network_forecaster.keras'  # Ensure this path is correct
-                model = load_trained_model(model_path)
-            
-            scaler, y_pred = prepare_and_predict(stock_data, model)
-            
-            # Debugging shapes and values of prediction
-            st.write("Shape of Predicted Values:", y_pred.shape)
-            st.write("First few predictions:", y_pred[:5])
-
-            # Aligning shapes properly
-            if len(y_pred) > len(stock_data['Close'][100:]):
-                y_pred = y_pred.flatten()[:len(stock_data['Close'][100:])]
-            
-            display_prediction_chart(stock_data, y_pred)
-            display_evaluation_metrics(stock_data, y_pred)
-            perform_and_display_forecasting(stock_data, model, scaler)
+            if selected_model == "Neural Network":
+                with st.spinner('Loading the prediction model...'):
+                    model_path = 'Models/NN_model.keras'  # Ensure this path is correct
+                    model = load_trained_model(model_path)
+                
+                scaler, y_pred = prepare_and_predict(stock_data, model)
+                display_prediction_chart(stock_data, y_pred)
+                display_evaluation_metrics(stock_data, y_pred)
+                perform_and_display_forecasting(stock_data, model, scaler)
+        else:
+            st.error("Failed to fetch stock data. Please check the ticker symbol and try again.")
     else:
-        st.error("Failed to fetch stock data. Please check the ticker symbol and try again.")
+        st.info("Enter a stock ticker symbol to begin.")
 
 if __name__ == '__main__':
     main()
