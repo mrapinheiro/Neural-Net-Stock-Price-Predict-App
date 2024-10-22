@@ -17,7 +17,7 @@ tf.random.set_seed(42)
 
 # Define stock data retrieval parameters
 start_date = '2000-01-01'
-end_date = '2024-02-01'
+end_date = '2024-10-22'
 stock_symbol = 'MSFT'
 
 # Download stock data
@@ -68,7 +68,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_wei
 model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1, validation_split=0.2, callbacks=[early_stopping])
 
 # Save the trained model
-model.save('neural_network_forecaster.keras')
+model.save('neural_network_forecaster.h5')
 
 # Predictions on test set
 y_pred = model.predict(x_test)
