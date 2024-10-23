@@ -6,6 +6,10 @@ A Streamlit application that predicts stock prices using a Neural Network model 
 
 - 2024/23/10
 
+## App on Streamlit:
+
+https://aeonquant.streamlit.app/
+
 ## Introduction
 
 The Aeon Stock Price Prediction App is a user-friendly tool that allows users to:
@@ -37,3 +41,5 @@ This application is built using Streamlit for the web interface, TensorFlow for 
 - Python 3.7 or higher
 - pip (Python package installer)
 - git (to clone the repository)
+
+# Disclaimer: Stock price prediction is inherently uncertain, and the predictions made by this app are for educational purposes only. They should not be used for investment decisions.
