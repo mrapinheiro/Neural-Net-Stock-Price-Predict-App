@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model
 import plotly.graph_objs as go
 
 # Cache the model loading to speed up app loading
-@st.cache(allow_output_mutation=True)
+@st.cache_resource(experimental_allow_widgets=True)
 def load_trained_model(model_path):
     return load_model(model_path)
 
