@@ -109,7 +109,7 @@ def perform_and_display_forecasting(stock_data, model, scaler):
 def main():
     st.sidebar.title('Aeon Stock Price Predict')
     stock_symbol = st.sidebar.text_input('Enter Stock Ticker Symbol (e.g., MSFT):')
-    start_date = st.sidebar.date_input('Select Start Date:', datetime.now() - timedelta(days=365))
+    start_date = st.sidebar.date_input('Select Start Date:', datetime(2000, 1, 1))
     end_date = st.sidebar.date_input('Select End Date:', datetime.now())
     selected_model = st.sidebar.radio("Select Model", ("Neural Network",))
 
