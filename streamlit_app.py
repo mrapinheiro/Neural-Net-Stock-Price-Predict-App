@@ -128,7 +128,7 @@ def main():
 
             if selected_model == "Neural Network":
                 with st.spinner('Loading the prediction model...'):
-                    model_path = 'Models/NN_model.keras'  # Ensure this path is correct
+                    model_path = 'Models/neural_forecaster.keras'  # Ensure this path is correct
                     model = load_trained_model(model_path)
                 
                 if model is not None:
