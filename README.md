@@ -1,4 +1,5 @@
-# Aeon Stock Price Prediction App
+# Aeon Quant Stock Price Prediction App
+# Disclaimer: Stock price prediction is inherently uncertain, and the predictions made by this app are for educational purposes only. They should not be used for investment decisions.
 
 A Streamlit application that predicts stock prices using a Neural Network model (LSTM) and visualizes stock data with interactive charts.
 
@@ -41,5 +42,3 @@ This application is built using Streamlit for the web interface, TensorFlow for 
 - Python 3.7 or higher
 - pip (Python package installer)
 - git (to clone the repository)
-
-# Disclaimer: Stock price prediction is inherently uncertain, and the predictions made by this app are for educational purposes only. They should not be used for investment decisions.
