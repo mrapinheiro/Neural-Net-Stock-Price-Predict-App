@@ -3,3 +3,5 @@ streamlit
 scikit-learn
 tensorflow
 plotly
+numpy
+pandas
