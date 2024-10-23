@@ -1,6 +1,7 @@
 # Aeon Stock Price Prediction App
 
 A Streamlit application that predicts stock prices using a Neural Network model (LSTM) and visualizes stock data with interactive charts.
+LAST MODEL UPDATE: 2024/23/10
 
 ## Introduction
 
