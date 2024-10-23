@@ -1,3 +1,6 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow logs
+
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -11,7 +14,11 @@ import plotly.graph_objs as go
 # Cache the model loading to speed up app loading
 @st.cache_resource
 def load_trained_model(model_path):
-    return load_model(model_path)
+    try:
+        return load_model(model_path)
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None
 
 def calculate_moving_average(data, window_size):
     return data.rolling(window=window_size).mean()
@@ -52,7 +59,7 @@ def prepare_and_predict(stock_data, model):
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_data = scaler.fit_transform(np.array(stock_data['Close']).reshape(-1, 1))
     x_pred = create_dataset(scaled_data)
-    x_pred = x_pred.reshape(x_pred.shape[0], -1)  # Adjusting the reshape to match model input
+    x_pred = x_pred.reshape((x_pred.shape[0], x_pred.shape[1], 1))  # Adjust for LSTM expecting 3D input
     y_pred = model.predict(x_pred)
     y_pred = scaler.inverse_transform(y_pred)
     return scaler, y_pred
@@ -78,13 +85,16 @@ def perform_and_display_forecasting(stock_data, model, scaler):
     last_100_days_scaled = scaler.transform(last_100_days)
 
     forecasted_prices_scaled = []
+    last_100_days_scaled_list = last_100_days_scaled.tolist()
+
     for _ in range(forecast_period_days):
-        x_forecast = last_100_days_scaled[-100:].reshape(1, 100)
+        x_forecast = np.array(last_100_days_scaled_list[-100:]).reshape(1, 100, 1)
         y_forecast_scaled = model.predict(x_forecast)
         forecasted_prices_scaled.append(y_forecast_scaled[0, 0])
-        last_100_days_scaled = np.append(last_100_days_scaled, y_forecast_scaled, axis=0)
+        last_100_days_scaled_list.append([y_forecast_scaled[0, 0]])
 
-    forecasted_prices = scaler.inverse_transform(np.array(forecasted_prices_scaled).reshape(-1, 1))
+    forecasted_prices_scaled = np.array(forecasted_prices_scaled).reshape(-1, 1)
+    forecasted_prices = scaler.inverse_transform(forecasted_prices_scaled)
 
     forecast_dates = pd.date_range(start=stock_data.index[-1] + timedelta(days=1), periods=forecast_period_days, freq='D')
     forecast_df = pd.DataFrame(data=forecasted_prices, index=forecast_dates, columns=['Forecast'])
@@ -106,14 +116,14 @@ def main():
     if stock_symbol:
         with st.spinner('Fetching stock data...'):
             stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
-        
+
         if not stock_data.empty:
             st.subheader(f'Stock Data for {stock_symbol}')
             st.write(stock_data.tail())
-            
+
             stock_data['MA100'] = calculate_moving_average(stock_data['Close'], 100)
             stock_data['MA200'] = calculate_moving_average(stock_data['Close'], 200)
-            
+
             display_charts(stock_data)
 
             if selected_model == "Neural Network":
@@ -121,12 +131,15 @@ def main():
                     model_path = 'Models/NN_model.keras'  # Ensure this path is correct
                     model = load_trained_model(model_path)
                 
-                scaler, y_pred = prepare_and_predict(stock_data, model)
-                display_prediction_chart(stock_data, y_pred)
-                display_evaluation_metrics(stock_data, y_pred)
-                perform_and_display_forecasting(stock_data, model, scaler)
+                if model is not None:
+                    scaler, y_pred = prepare_and_predict(stock_data, model)
+                    display_prediction_chart(stock_data, y_pred)
+                    display_evaluation_metrics(stock_data, y_pred)
+                    perform_and_display_forecasting(stock_data, model, scaler)
+                else:
+                    st.error("Model could not be loaded. Please check the model path.")
         else:
-            st.error("Failed to fetch stock data. Please check the ticker symbol and try again.")
+            st.error("Failed to fetch stock data. Please check the ticker symbol and date range.")
     else:
         st.info("Enter a stock ticker symbol to begin.")
 
