@@ -27,7 +27,7 @@ tf.random.set_seed(42)
 
 # Define stock data retrieval parameters
 start_date = '2000-01-01'
-end_date = '2024-02-01'
+end_date = '2024-23-10'
 stock_symbol = 'MSFT'
 
 # Download stock data
