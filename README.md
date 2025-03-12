@@ -110,4 +110,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-*Built with ❤️ by [Vortex Legacy]*
+*Built with ❤️ by Vortex Legacy*
