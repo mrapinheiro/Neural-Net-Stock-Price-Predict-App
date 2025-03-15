@@ -62,7 +62,7 @@ The stock prediction model utilizes a sequential LSTM (Long Short-Term Memory) n
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/aeon-quant.git
+   git clone https://github.com/mrapinheiro/neural-net-stock-price-predictor.git
    cd aeon-quant
    ```
 
